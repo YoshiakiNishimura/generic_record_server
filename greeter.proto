@@ -1,0 +1,4 @@
+syntax = "proto3";
+
+service Greeter { rpc SayHello(StringValue) returns (StringValue); }
+message StringValue { string value = 1; }
