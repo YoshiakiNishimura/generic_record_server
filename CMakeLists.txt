@@ -4,12 +4,13 @@ project(GreeterGrpc)
 find_package(Protobuf REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
 
-set(PROTO_SRC greeter.proto)
+set(PROTO_BASENAME greeter)
+set(PROTO_SRC ${PROTO_BASENAME}.proto)
 
-set(PROTO_GEN_SRC "${CMAKE_CURRENT_BINARY_DIR}/greeter.pb.cc")
-set(PROTO_GEN_HDR "${CMAKE_CURRENT_BINARY_DIR}/greeter.pb.h")
-set(GRPC_GEN_SRC "${CMAKE_CURRENT_BINARY_DIR}/greeter.grpc.pb.cc")
-set(GRPC_GEN_HDR "${CMAKE_CURRENT_BINARY_DIR}/greeter.grpc.pb.h")
+set(PROTO_GEN_SRC "${CMAKE_CURRENT_BINARY_DIR}/${PROTO_BASENAME}.pb.cc")
+set(PROTO_GEN_HDR "${CMAKE_CURRENT_BINARY_DIR}/${PROTO_BASENAME}.pb.h")
+set(GRPC_GEN_SRC "${CMAKE_CURRENT_BINARY_DIR}/${PROTO_BASENAME}.grpc.pb.cc")
+set(GRPC_GEN_HDR "${CMAKE_CURRENT_BINARY_DIR}/${PROTO_BASENAME}.grpc.pb.h")
 
 add_custom_command(
   OUTPUT ${PROTO_GEN_SRC} ${PROTO_GEN_HDR} ${GRPC_GEN_SRC} ${GRPC_GEN_HDR}
