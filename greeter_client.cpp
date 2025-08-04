@@ -7,7 +7,7 @@
 
 using grpc::ClientContext;
 using grpc::Status;
-
+using namespace plugin::udf;
 greeter_client::greeter_client(std::shared_ptr<grpc::Channel> channel)
     : stub_(Greeter::NewStub(channel)) {}
 

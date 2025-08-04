@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 
+using namespace plugin::udf;
 int main() {
     auto channel = grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
 

@@ -1,6 +1,6 @@
-#include "udf/generic_client_factory.h"
 #include "greeter_client.h"
-
+#include "udf/generic_client_factory.h"
+using namespace plugin::udf;
 class greeter_client_factory : public generic_client_factory {
   public:
     generic_client* create(std::shared_ptr<grpc::Channel> channel) const override {

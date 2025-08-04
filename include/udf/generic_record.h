@@ -5,9 +5,15 @@
 #include <optional>
 #include <string>
 
-class generic_record_cursor;
+namespace plugin::udf {
+class generic_record_cursor {
+  public:
+    virtual ~generic_record_cursor() = default;
 
-class generic_record {
+    virtual std::optional<std::int32_t> fetch_int4()  = 0;
+    virtual std::optional<std::int64_t> fetch_int8()  = 0;
+    virtual std::optional<std::string> fetch_string() = 0;
+};class generic_record {
   public:
     virtual ~generic_record() = default;
 
@@ -25,11 +31,4 @@ class generic_record {
     virtual std::unique_ptr<generic_record_cursor> cursor() const = 0;
 };
 
-class generic_record_cursor {
-  public:
-    virtual ~generic_record_cursor() = default;
-
-    virtual std::optional<std::int32_t> fetch_int4()  = 0;
-    virtual std::optional<std::int64_t> fetch_int8()  = 0;
-    virtual std::optional<std::string> fetch_string() = 0;
-};
+} // namespace plugin::udf

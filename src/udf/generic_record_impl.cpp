@@ -1,5 +1,6 @@
 #include "udf/generic_record_impl.h"
 
+namespace plugin::udf {
 void generic_record_impl::reset() { values_.clear(); }
 
 void generic_record_impl::add_int4(std::int32_t) {}
@@ -26,3 +27,5 @@ std::optional<std::string> generic_record_cursor_impl::fetch_string() {
     if (index_ < values_.size()) { return values_[index_++]; }
     return std::nullopt;
 }
+
+} // namespace plugin::udf

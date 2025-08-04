@@ -2,7 +2,8 @@
 #include "generic_record.h"
 #include <vector>
 
-class generic_record_cursor_impl;
+namespace plugin::udf {
+// class generic_record_cursor_impl;
 
 class generic_record_impl : public generic_record {
   public:
@@ -30,3 +31,4 @@ class generic_record_cursor_impl : public generic_record_cursor {
     const std::vector<std::optional<std::string>>& values_;
     std::size_t index_ = 0;
 };
+} // namespace plugin::udf

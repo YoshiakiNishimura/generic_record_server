@@ -6,12 +6,12 @@
 #include "greeter.pb.h"
 #include <grpcpp/grpcpp.h>
 
-using ::Greeter;
-using ::StringValue;
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::Status;
+using myapi::Greeter;
+using myapi::StringValue;
 
 class GreeterServiceImpl final : public Greeter::Service {
     Status SayHello(

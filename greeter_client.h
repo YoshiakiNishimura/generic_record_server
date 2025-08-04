@@ -6,6 +6,11 @@
 #include <memory>
 #include <string>
 
+using myapi::Greeter;
+using myapi::StringValue;
+using myapi::Int32Value;
+
+using namespace plugin::udf;
 class greeter_client : public generic_client {
   public:
     explicit greeter_client(std::shared_ptr<grpc::Channel> channel);
