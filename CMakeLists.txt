@@ -5,7 +5,7 @@ find_package(Protobuf REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
 
 set(PROTO_BASENAME greeter)
-set(PROTO_SRC ${PROTO_BASENAME}.proto)
+set(PROTO_SRC proto/${PROTO_BASENAME}.proto)
 
 set(PROTO_GEN_SRC "${CMAKE_CURRENT_BINARY_DIR}/${PROTO_BASENAME}.pb.cc")
 set(PROTO_GEN_HDR "${CMAKE_CURRENT_BINARY_DIR}/${PROTO_BASENAME}.pb.h")
@@ -18,7 +18,7 @@ add_custom_command(
   ARGS --grpc_out=${CMAKE_CURRENT_BINARY_DIR}
        --cpp_out=${CMAKE_CURRENT_BINARY_DIR}
        --plugin=protoc-gen-grpc=$<TARGET_FILE:gRPC::grpc_cpp_plugin>
-       -I ${CMAKE_CURRENT_SOURCE_DIR}
+       -I ${CMAKE_CURRENT_SOURCE_DIR}/proto
        ${CMAKE_CURRENT_SOURCE_DIR}/${PROTO_SRC}
   DEPENDS ${PROTO_SRC}
 )
@@ -39,7 +39,7 @@ add_executable(greeter_client greeter_client.cpp
 )
 target_include_directories(greeter_client PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}
 )
-target_include_directories(greeter_client PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(greeter_client gRPC::grpc++ protobuf::libprotobuf)
 
