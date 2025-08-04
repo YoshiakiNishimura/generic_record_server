@@ -1,5 +1,5 @@
-#include "generic_client_factory.h"
-#include "generic_record_impl.h"
+#include "udf/generic_client_factory.h"
+#include "udf/generic_record_impl.h"
 #include <grpcpp/grpcpp.h>
 #include <iostream>
 #include <memory>

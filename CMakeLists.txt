@@ -31,11 +31,14 @@ target_include_directories(greeter_server PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(greeter_server gRPC::grpc++ protobuf::libprotobuf)
 
 add_executable(greeter_client greeter_client.cpp
-  generic_record_impl.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/udf/generic_record_impl.cpp
   greeter_client_factory.cpp
   main.cpp
   ${PROTO_GEN_SRC} ${PROTO_GEN_HDR}
   ${GRPC_GEN_SRC} ${GRPC_GEN_HDR}
+)
+target_include_directories(greeter_client PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 target_include_directories(greeter_client PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(greeter_client gRPC::grpc++ protobuf::libprotobuf)

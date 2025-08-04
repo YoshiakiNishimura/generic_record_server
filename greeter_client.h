@@ -1,6 +1,6 @@
 #pragma once
 
-#include "generic_client.h"
+#include "udf/generic_client.h"
 #include "greeter.grpc.pb.h"
 #include <grpcpp/grpcpp.h>
 #include <memory>
