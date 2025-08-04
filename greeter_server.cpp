@@ -12,12 +12,18 @@ using grpc::ServerContext;
 using grpc::Status;
 using myapi::Greeter;
 using myapi::StringValue;
+using myapi::Int32Value;
 
 class GreeterServiceImpl final : public Greeter::Service {
     Status SayHello(
         ServerContext* context, const StringValue* request, StringValue* reply) override {
         std::string prefix("Hello ");
         reply->set_value(prefix + request->value());
+        return Status::OK;
+    }
+    Status IntAddOne(ServerContext* context, const Int32Value* request, Int32Value* reply) override {
+        int sum = request->value() + 1;
+        reply->set_value(sum);
         return Status::OK;
     }
 };

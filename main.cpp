@@ -20,19 +20,37 @@ int main() {
         tsurugi_destroy_generic_client_factory(factory);
         return 1;
     }
+    {
+        std::cout << "SayHello connect" << std::endl;
+        generic_record_impl request;
+        request.add_string("world");
 
-    generic_record_impl request;
-    request.add_string("world");
+        generic_record_impl response;
+        grpc::ClientContext context;
 
-    generic_record_impl response;
-    grpc::ClientContext context;
+        client->call(context, 0, request, response);
 
-    client->call(context, 0, request, response);
+        if (auto cursor = response.cursor()) {
+            if (auto result = cursor->fetch_string()) {
+                std::cout << "Greeter received: " << *result << std::endl;
+            }
+        }
+    }
+    {
+        std::cout << "AddIntOne connect" << std::endl;
+        generic_record_impl request;
+        request.add_int4(42);
 
-    auto cursor = response.cursor();
-    if (cursor) {
-        auto result = cursor->fetch_string();
-        if (result) { std::cout << "Greeter received: " << *result << std::endl; }
+        generic_record_impl response;
+        grpc::ClientContext context;
+
+        client->call(context, 1, request, response);
+
+        if (auto cursor = response.cursor()) {
+            if (auto result = cursor->fetch_int4()) {
+                std::cout << "Greeter received: " << *result << std::endl;
+            }
+        }
     }
 
     tsurugi_destroy_generic_client(client.release());

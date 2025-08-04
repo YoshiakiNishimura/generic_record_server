@@ -1,14 +1,14 @@
 #pragma once
 
-#include "udf/generic_client.h"
 #include "greeter.grpc.pb.h"
+#include "udf/generic_client.h"
 #include <grpcpp/grpcpp.h>
 #include <memory>
 #include <string>
 
 using myapi::Greeter;
-using myapi::StringValue;
 using myapi::Int32Value;
+using myapi::StringValue;
 
 using namespace plugin::udf;
 class greeter_client : public generic_client {

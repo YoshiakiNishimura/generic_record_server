@@ -13,7 +13,10 @@ class generic_record_cursor {
     virtual std::optional<std::int32_t> fetch_int4()  = 0;
     virtual std::optional<std::int64_t> fetch_int8()  = 0;
     virtual std::optional<std::string> fetch_string() = 0;
-};class generic_record {
+    virtual bool has_next()                           = 0;
+};
+
+class generic_record {
   public:
     virtual ~generic_record() = default;
 

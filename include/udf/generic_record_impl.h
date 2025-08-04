@@ -1,9 +1,12 @@
 #pragma once
 #include "generic_record.h"
+#include <optional>
+#include <variant>
 #include <vector>
 
 namespace plugin::udf {
-// class generic_record_cursor_impl;
+
+using value_type = std::optional<std::variant<std::int32_t, std::int64_t, std::string>>;
 
 class generic_record_impl : public generic_record {
   public:
@@ -17,18 +20,20 @@ class generic_record_impl : public generic_record {
     std::unique_ptr<generic_record_cursor> cursor() const override;
 
   private:
-    std::vector<std::optional<std::string>> values_;
+    std::vector<value_type> values_;
 };
 
 class generic_record_cursor_impl : public generic_record_cursor {
   public:
-    explicit generic_record_cursor_impl(const std::vector<std::optional<std::string>>& values);
+    explicit generic_record_cursor_impl(const std::vector<value_type>& values);
     std::optional<std::int32_t> fetch_int4() override;
     std::optional<std::int64_t> fetch_int8() override;
     std::optional<std::string> fetch_string() override;
+    bool has_next() override;
 
   private:
-    const std::vector<std::optional<std::string>>& values_;
+    const std::vector<value_type>& values_;
     std::size_t index_ = 0;
 };
+
 } // namespace plugin::udf
