@@ -18,7 +18,7 @@ void greeter_client::call(ClientContext& context, function_index_type function_i
 
     response.reset();
     auto fail = [&response]() { response.add_string("RPC failed"); };
-    switch (function_index) {
+    switch (function_index.second) {
         case 0: { // SayHello expects 0 string
             auto maybe_user = cursor->fetch_string();
             if (!maybe_user) { throw std::runtime_error("No input string provided"); }

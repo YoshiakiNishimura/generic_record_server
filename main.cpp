@@ -28,7 +28,7 @@ int main() {
         generic_record_impl response;
         grpc::ClientContext context;
 
-        client->call(context, 0, request, response);
+        client->call(context, {0, 0}, request, response);
 
         if (auto cursor = response.cursor()) {
             if (auto result = cursor->fetch_string()) {
@@ -44,7 +44,7 @@ int main() {
         generic_record_impl response;
         grpc::ClientContext context;
 
-        client->call(context, 1, request, response);
+        client->call(context, {0, 1}, request, response);
 
         if (auto cursor = response.cursor()) {
             if (auto result = cursor->fetch_int4()) {
