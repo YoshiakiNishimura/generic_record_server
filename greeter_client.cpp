@@ -17,7 +17,7 @@ void greeter_client::call(ClientContext& context, function_index_type function_i
     if (!cursor) { throw std::runtime_error("request cursor is null"); }
 
     response.reset();
-
+    auto fail = [&response]() { response.add_string("RPC failed"); };
     switch (function_index) {
         case 0: { // SayHello expects 0 string
             auto maybe_user = cursor->fetch_string();
@@ -31,7 +31,7 @@ void greeter_client::call(ClientContext& context, function_index_type function_i
             if (status.ok()) {
                 response.add_string(rep.value());
             } else {
-                response.add_string("RPC failed");
+                fail();
             }
             break;
         }
@@ -45,7 +45,7 @@ void greeter_client::call(ClientContext& context, function_index_type function_i
             if (status.ok()) {
                 response.add_int4(rep.value());
             } else {
-                response.add_string("RPC failed");
+                fail();
             }
             break;
         }

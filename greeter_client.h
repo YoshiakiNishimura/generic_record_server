@@ -7,8 +7,6 @@
 #include <string>
 
 using myapi::Greeter;
-using myapi::Int32Value;
-using myapi::StringValue;
 
 using namespace plugin::udf;
 class greeter_client : public generic_client {

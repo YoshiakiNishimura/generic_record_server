@@ -11,8 +11,6 @@ using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::Status;
 using myapi::Greeter;
-using myapi::Int32Value;
-using myapi::StringValue;
 
 class GreeterServiceImpl final : public Greeter::Service {
     Status SayHello(
