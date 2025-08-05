@@ -7,6 +7,7 @@
 #include <string>
 
 using myapi::Greeter;
+using myapi::Byer;
 
 using namespace plugin::udf;
 class greeter_client : public generic_client {
@@ -17,5 +18,6 @@ class greeter_client : public generic_client {
         generic_record& request, generic_record& response) const override;
 
   private:
-    std::unique_ptr<Greeter::Stub> stub_;
+    std::unique_ptr<Greeter::Stub> greeter_stub_;
+    std::unique_ptr<Byer::Stub> byer_stub_;
 };

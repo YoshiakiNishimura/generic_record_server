@@ -9,7 +9,7 @@ using grpc::ClientContext;
 using grpc::Status;
 using namespace plugin::udf;
 greeter_client::greeter_client(std::shared_ptr<grpc::Channel> channel)
-    : stub_(Greeter::NewStub(channel)) {}
+    : greeter_stub_(Greeter::NewStub(channel)) {}
 
 void greeter_client::call(ClientContext& context, function_index_type function_index,
     generic_record& request, generic_record& response) const {
@@ -27,7 +27,7 @@ void greeter_client::call(ClientContext& context, function_index_type function_i
             req.set_value(*maybe_user);
             StringValue rep;
 
-            Status status = stub_->SayHello(&context, req, &rep);
+            Status status = greeter_stub_->SayHello(&context, req, &rep);
             if (status.ok()) {
                 response.add_string(rep.value());
             } else {
@@ -41,7 +41,7 @@ void greeter_client::call(ClientContext& context, function_index_type function_i
             Int32Value req;
             req.set_value(*maybe_user);
             Int32Value rep;
-            Status status = stub_->IntAddOne(&context, req, &rep);
+            Status status = greeter_stub_->IntAddOne(&context, req, &rep);
             if (status.ok()) {
                 response.add_int4(rep.value());
             } else {
