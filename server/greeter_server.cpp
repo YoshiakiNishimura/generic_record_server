@@ -10,6 +10,7 @@ using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::Status;
+using myapi::Byer;
 using myapi::Greeter;
 
 class GreeterServiceImpl final : public Greeter::Service {
@@ -27,13 +28,24 @@ class GreeterServiceImpl final : public Greeter::Service {
     }
 };
 
+class ByerServiceImpl final : public Byer::Service {
+    Status SayWorld(
+        ServerContext* context, const StringValue* request, StringValue* reply) override {
+        std::string prefix("World ");
+        reply->set_value(prefix + request->value());
+        return Status::OK;
+    }
+};
+
 void RunServer() {
     std::string server_address("0.0.0.0:50051");
-    GreeterServiceImpl service;
+    GreeterServiceImpl greeter_service;
+    ByerServiceImpl byer_service;
 
     ServerBuilder builder;
     builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
-    builder.RegisterService(&service);
+    builder.RegisterService(&greeter_service);
+    builder.RegisterService(&byer_service);
     std::unique_ptr<Server> server(builder.BuildAndStart());
     std::cout << "Server listening on " << server_address << std::endl;
 

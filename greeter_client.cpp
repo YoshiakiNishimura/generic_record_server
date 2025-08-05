@@ -9,7 +9,7 @@ using grpc::ClientContext;
 using grpc::Status;
 using namespace plugin::udf;
 greeter_client::greeter_client(std::shared_ptr<grpc::Channel> channel)
-    : greeter_stub_(Greeter::NewStub(channel)) {}
+    : greeter_stub_(Greeter::NewStub(channel)), byer_stub_(myapi::Byer::NewStub(channel)) {}
 
 void greeter_client::call(ClientContext& context, function_index_type function_index,
     generic_record& request, generic_record& response) const {
@@ -44,6 +44,22 @@ void greeter_client::call(ClientContext& context, function_index_type function_i
             Status status = greeter_stub_->IntAddOne(&context, req, &rep);
             if (status.ok()) {
                 response.add_int4(rep.value());
+            } else {
+                fail();
+            }
+            break;
+        }
+        case 2: { // SayWorld expects 0 string
+            auto maybe_user = cursor->fetch_string();
+            if (!maybe_user) { throw std::runtime_error("No input string provided"); }
+
+            StringValue req;
+            req.set_value(*maybe_user);
+            StringValue rep;
+
+            Status status = byer_stub_->SayWorld(&context, req, &rep);
+            if (status.ok()) {
+                response.add_string(rep.value());
             } else {
                 fail();
             }

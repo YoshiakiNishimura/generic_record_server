@@ -23,7 +23,7 @@ int main() {
     {
         std::cout << "SayHello connect" << std::endl;
         generic_record_impl request;
-        request.add_string("world");
+        request.add_string("hello");
 
         generic_record_impl response;
         grpc::ClientContext context;
@@ -48,6 +48,22 @@ int main() {
 
         if (auto cursor = response.cursor()) {
             if (auto result = cursor->fetch_int4()) {
+                std::cout << "Greeter received: " << *result << std::endl;
+            }
+        }
+    }
+    {
+        std::cout << "SayWolrd connect" << std::endl;
+        generic_record_impl request;
+        request.add_string("world");
+
+        generic_record_impl response;
+        grpc::ClientContext context;
+
+        client->call(context, {0, 2}, request, response);
+
+        if (auto cursor = response.cursor()) {
+            if (auto result = cursor->fetch_string()) {
                 std::cout << "Greeter received: " << *result << std::endl;
             }
         }
