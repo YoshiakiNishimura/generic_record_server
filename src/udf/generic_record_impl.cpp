@@ -12,6 +12,14 @@ void generic_record_impl::add_int8(std::int64_t v) { values_.emplace_back(v); }
 
 void generic_record_impl::add_int8_null() { values_.emplace_back(std::nullopt); }
 
+void generic_record_impl::add_float(float v) { values_.emplace_back(v); }
+
+void generic_record_impl::add_float_null() { values_.emplace_back(std::nullopt); }
+
+void generic_record_impl::add_double(double v) { values_.emplace_back(v); }
+
+void generic_record_impl::add_double_null() { values_.emplace_back(std::nullopt); }
+
 void generic_record_impl::add_string(std::string value) { values_.emplace_back(std::move(value)); }
 
 void generic_record_impl::add_string_null() { values_.emplace_back(std::nullopt); }
@@ -46,6 +54,22 @@ std::optional<std::string> generic_record_cursor_impl::fetch_string() {
     const auto& opt = values_[index_++];
     if (!opt) return std::nullopt;
     if (auto p = std::get_if<std::string>(&*opt)) return *p;
+    return std::nullopt;
+}
+
+std::optional<float> generic_record_cursor_impl::fetch_float() {
+    if (!has_next()) return std::nullopt;
+    const auto& opt = values_[index_++];
+    if (!opt) return std::nullopt;
+    if (auto p = std::get_if<float>(&*opt)) return *p;
+    return std::nullopt;
+}
+
+std::optional<double> generic_record_cursor_impl::fetch_double() {
+    if (!has_next()) return std::nullopt;
+    const auto& opt = values_[index_++];
+    if (!opt) return std::nullopt;
+    if (auto p = std::get_if<double>(&*opt)) return *p;
     return std::nullopt;
 }
 
