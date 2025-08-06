@@ -6,8 +6,8 @@
 
 namespace plugin::udf {
 
-using value_type =
-    std::optional<std::variant<std::int32_t, std::int64_t, std::string, double, float>>;
+using value_type = std::optional<std::variant<std::int32_t, std::int64_t, std::uint32_t,
+    std::uint64_t, std::string, double, float>>;
 
 class generic_record_impl : public generic_record {
   public:
@@ -16,6 +16,10 @@ class generic_record_impl : public generic_record {
     void add_int4_null() override;
     void add_int8(std::int64_t value) override;
     void add_int8_null() override;
+    void add_uint4(std::uint32_t value) override;
+    void add_uint4_null() override;
+    void add_uint8(std::uint64_t value) override;
+    void add_uint8_null() override;
     void add_float(float value) override;
     void add_float_null() override;
     void add_double(double value) override;
@@ -33,6 +37,8 @@ class generic_record_cursor_impl : public generic_record_cursor {
     explicit generic_record_cursor_impl(const std::vector<value_type>& values);
     std::optional<std::int32_t> fetch_int4() override;
     std::optional<std::int64_t> fetch_int8() override;
+    std::optional<std::uint32_t> fetch_uint4() override;
+    std::optional<std::uint64_t> fetch_uint8() override;
     std::optional<float> fetch_float() override;
     std::optional<double> fetch_double() override;
     std::optional<std::string> fetch_string() override;

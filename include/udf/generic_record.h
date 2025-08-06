@@ -11,12 +11,14 @@ class generic_record_cursor {
   public:
     virtual ~generic_record_cursor() = default;
 
-    virtual std::optional<std::int32_t> fetch_int4()  = 0;
-    virtual std::optional<std::int64_t> fetch_int8()  = 0;
-    virtual std::optional<float> fetch_float()        = 0;
-    virtual std::optional<double> fetch_double()      = 0;
-    virtual std::optional<std::string> fetch_string() = 0;
-    virtual bool has_next()                           = 0;
+    virtual std::optional<std::int32_t> fetch_int4()   = 0;
+    virtual std::optional<std::int64_t> fetch_int8()   = 0;
+    virtual std::optional<std::uint32_t> fetch_uint4() = 0;
+    virtual std::optional<std::uint64_t> fetch_uint8() = 0;
+    virtual std::optional<float> fetch_float()         = 0;
+    virtual std::optional<double> fetch_double()       = 0;
+    virtual std::optional<std::string> fetch_string()  = 0;
+    virtual bool has_next()                            = 0;
 };
 
 class generic_record {
@@ -30,6 +32,12 @@ class generic_record {
 
     virtual void add_int8(std::int64_t value) = 0;
     virtual void add_int8_null()              = 0;
+
+    virtual void add_uint4(std::uint32_t value) = 0;
+    virtual void add_uint4_null()               = 0;
+
+    virtual void add_uint8(std::uint64_t value) = 0;
+    virtual void add_uint8_null()               = 0;
 
     virtual void add_float(float value) = 0;
     virtual void add_float_null()       = 0;

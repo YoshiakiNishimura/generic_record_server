@@ -12,6 +12,14 @@ void generic_record_impl::add_int8(std::int64_t v) { values_.emplace_back(v); }
 
 void generic_record_impl::add_int8_null() { values_.emplace_back(std::nullopt); }
 
+void generic_record_impl::add_uint4(std::uint32_t v) { values_.emplace_back(v); }
+
+void generic_record_impl::add_uint4_null() { values_.emplace_back(std::nullopt); }
+
+void generic_record_impl::add_uint8(std::uint64_t v) { values_.emplace_back(v); }
+
+void generic_record_impl::add_uint8_null() { values_.emplace_back(std::nullopt); }
+
 void generic_record_impl::add_float(float v) { values_.emplace_back(v); }
 
 void generic_record_impl::add_float_null() { values_.emplace_back(std::nullopt); }
@@ -46,6 +54,22 @@ std::optional<std::int64_t> generic_record_cursor_impl::fetch_int8() {
     const auto& opt = values_[index_++];
     if (!opt) return std::nullopt;
     if (auto p = std::get_if<std::int64_t>(&*opt)) return *p;
+    return std::nullopt;
+}
+
+std::optional<std::uint32_t> generic_record_cursor_impl::fetch_uint4() {
+    if (!has_next()) return std::nullopt;
+    const auto& opt = values_[index_++];
+    if (!opt) return std::nullopt;
+    if (auto p = std::get_if<std::uint32_t>(&*opt)) return *p;
+    return std::nullopt;
+}
+
+std::optional<std::uint64_t> generic_record_cursor_impl::fetch_uint8() {
+    if (!has_next()) return std::nullopt;
+    const auto& opt = values_[index_++];
+    if (!opt) return std::nullopt;
+    if (auto p = std::get_if<std::uint64_t>(&*opt)) return *p;
     return std::nullopt;
 }
 
