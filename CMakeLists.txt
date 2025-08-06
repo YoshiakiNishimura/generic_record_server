@@ -4,7 +4,7 @@ project(GreeterGrpc)
 find_package(Protobuf REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
 
-set(PROTO_BASENAME greeter)
+set(PROTO_BASENAME sample)
 set(PROTO_PRIMITIV primitive_types)
 set(PROTO_COMPLEX complex_types)
 set(PROTO_FILES proto/${PROTO_BASENAME}.proto proto/${PROTO_PRIMITIV}.proto

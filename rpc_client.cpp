@@ -1,6 +1,6 @@
 #include "rpc_client.h"
-#include "greeter.grpc.pb.h"
-#include "greeter.pb.h"
+#include "sample.grpc.pb.h"
+#include "sample.pb.h"
 
 #include <iostream>
 #include <stdexcept>

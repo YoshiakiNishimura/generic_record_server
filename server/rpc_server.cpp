@@ -2,8 +2,8 @@
 #include <memory>
 #include <string>
 
-#include "greeter.grpc.pb.h"
-#include "greeter.pb.h"
+#include "sample.grpc.pb.h"
+#include "sample.pb.h"
 #include <grpcpp/grpcpp.h>
 
 using grpc::Server;
