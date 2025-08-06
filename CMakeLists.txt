@@ -39,24 +39,24 @@ foreach(PROTO_PATH ${PROTO_FILES})
 endforeach()
 add_custom_target(proto_gen DEPENDS ${PROTO_GEN_ALL})
 add_executable(
-  greeter_server
-  ${CMAKE_CURRENT_SOURCE_DIR}/server/greeter_server.cpp ${PROTO_GEN_SRCS}
+  rpc_server
+  ${CMAKE_CURRENT_SOURCE_DIR}/server/rpc_server.cpp ${PROTO_GEN_SRCS}
   ${PROTO_GEN_HDRS} ${GRPC_GEN_SRCS} ${GRPC_GEN_HDRS})
-add_dependencies(greeter_server proto_gen)
-target_include_directories(greeter_server PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
-target_link_libraries(greeter_server gRPC::grpc++ protobuf::libprotobuf)
+add_dependencies(rpc_server proto_gen)
+target_include_directories(rpc_server PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_link_libraries(rpc_server gRPC::grpc++ protobuf::libprotobuf)
 
 add_executable(
-  greeter_client
-  greeter_client.cpp
+  rpc_client
+  rpc_client.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/udf/generic_record_impl.cpp
-  greeter_client_factory.cpp
+  rpc_client_factory.cpp
   main.cpp
   ${PROTO_GEN_SRCS}
   ${PROTO_GEN_HDRS}
   ${GRPC_GEN_SRCS}
   ${GRPC_GEN_HDRS})
 target_include_directories(
-  greeter_client PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
+  rpc_client PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
                          ${CMAKE_CURRENT_BINARY_DIR})
-target_link_libraries(greeter_client gRPC::grpc++ protobuf::libprotobuf)
+target_link_libraries(rpc_client gRPC::grpc++ protobuf::libprotobuf)
