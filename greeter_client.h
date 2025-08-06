@@ -6,13 +6,13 @@
 #include <memory>
 #include <string>
 
-using myapi::Greeter;
 using myapi::Byer;
+using myapi::Greeter;
 
 using namespace plugin::udf;
-class greeter_client : public generic_client {
+class rpc_client : public generic_client {
   public:
-    explicit greeter_client(std::shared_ptr<grpc::Channel> channel);
+    explicit rpc_client(std::shared_ptr<grpc::Channel> channel);
 
     void call(grpc::ClientContext& context, function_index_type function_index,
         generic_record& request, generic_record& response) const override;

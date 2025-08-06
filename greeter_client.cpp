@@ -8,10 +8,10 @@
 using grpc::ClientContext;
 using grpc::Status;
 using namespace plugin::udf;
-greeter_client::greeter_client(std::shared_ptr<grpc::Channel> channel)
+rpc_client::rpc_client(std::shared_ptr<grpc::Channel> channel)
     : greeter_stub_(Greeter::NewStub(channel)), byer_stub_(myapi::Byer::NewStub(channel)) {}
 
-void greeter_client::call(ClientContext& context, function_index_type function_index,
+void rpc_client::call(ClientContext& context, function_index_type function_index,
     generic_record& request, generic_record& response) const {
     auto cursor = request.cursor();
     if (!cursor) { throw std::runtime_error("request cursor is null"); }

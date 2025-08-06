@@ -35,6 +35,10 @@ class ByerServiceImpl final : public Byer::Service {
         reply->set_value(prefix + request->value());
         return Status::OK;
     }
+    Status DecDecimal(ServerContext* context, const tsurugidb::udf::value::Decimal* request,
+        tsurugidb::udf::value::LocalTime* reply) override {
+        return Status::OK;
+    }
 };
 
 void RunServer() {

@@ -1,15 +1,15 @@
 #include "greeter_client.h"
 #include "udf/generic_client_factory.h"
 using namespace plugin::udf;
-class greeter_client_factory : public generic_client_factory {
+class rpc_client_factory : public generic_client_factory {
   public:
     generic_client* create(std::shared_ptr<grpc::Channel> channel) const override {
-        return new greeter_client(channel);
+        return new rpc_client(channel);
     }
 };
 
 extern "C" generic_client_factory* tsurugi_create_generic_client_factory(const char* service_name) {
-    if (std::string_view(service_name) == "Greeter") { return new greeter_client_factory(); }
+    if (std::string_view(service_name) == "Greeter") { return new rpc_client_factory(); }
     return nullptr;
 }
 
