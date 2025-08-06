@@ -19,13 +19,12 @@ void rpc_client::call(ClientContext& context, function_index_type function_index
     response.reset();
     auto fail = [&response]() { response.add_string("RPC failed"); };
     switch (function_index.second) {
-        case 0: { // SayHello expects 0 string
-            auto maybe_user = cursor->fetch_string();
-            if (!maybe_user) { throw std::runtime_error("No input string provided"); }
-
+        case 0: {
             StringValue req;
-            req.set_value(*maybe_user);
             StringValue rep;
+            auto arg1 = cursor->fetch_string();
+            if (!arg1) { throw std::runtime_error("No input arg1"); }
+            req.set_value(*arg1);
 
             Status status = greeter_stub_->SayHello(&context, req, &rep);
             if (status.ok()) {
@@ -36,11 +35,12 @@ void rpc_client::call(ClientContext& context, function_index_type function_index
             break;
         }
 
-        case 1: { // IntAddInt expects 1 int32 inputs
-            auto maybe_user = cursor->fetch_int4();
+        case 1: {
             Int32Value req;
-            req.set_value(*maybe_user);
             Int32Value rep;
+            auto arg1 = cursor->fetch_int4();
+            if (!arg1) { throw std::runtime_error("No input arg1"); }
+            req.set_value(*arg1);
             Status status = greeter_stub_->IntAddOne(&context, req, &rep);
             if (status.ok()) {
                 response.add_int4(rep.value());
@@ -49,17 +49,33 @@ void rpc_client::call(ClientContext& context, function_index_type function_index
             }
             break;
         }
-        case 2: { // SayWorld expects 0 string
-            auto maybe_user = cursor->fetch_string();
-            if (!maybe_user) { throw std::runtime_error("No input string provided"); }
-
+        case 2: {
             StringValue req;
-            req.set_value(*maybe_user);
             StringValue rep;
-
+            auto arg1 = cursor->fetch_string();
+            if (!arg1) { throw std::runtime_error("No input arg1"); }
+            req.set_value(*arg1);
             Status status = byer_stub_->SayWorld(&context, req, &rep);
             if (status.ok()) {
                 response.add_string(rep.value());
+            } else {
+                fail();
+            }
+            break;
+        }
+        case 3: {
+            tsurugidb::udf::value::Decimal req;
+            tsurugidb::udf::value::LocalTime rep;
+            auto arg1 = cursor->fetch_string();
+            if (!arg1) { throw std::runtime_error("No input arg1"); }
+            auto arg2 = cursor->fetch_int4();
+            if (!arg2) { throw std::runtime_error("No input arg2"); }
+
+            req.set_unscaled_value(*arg1);
+            req.set_exponent(*arg2);
+            Status status = byer_stub_->DecDecimal(&context, req, &rep);
+            if (status.ok()) {
+                response.add_int8(rep.nanos());
             } else {
                 fail();
             }

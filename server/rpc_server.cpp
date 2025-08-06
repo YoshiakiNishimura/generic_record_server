@@ -37,6 +37,7 @@ class ByerServiceImpl final : public Byer::Service {
     }
     Status DecDecimal(ServerContext* context, const tsurugidb::udf::value::Decimal* request,
         tsurugidb::udf::value::LocalTime* reply) override {
+        std::cout << request->unscaled_value() << " " << request->exponent() << std::endl;
         return Status::OK;
     }
 };

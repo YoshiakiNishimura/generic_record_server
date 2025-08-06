@@ -68,6 +68,22 @@ int main() {
             }
         }
     }
+    {
+        std::cout << "DecDecimal connect" << std::endl;
+        generic_record_impl request;
+        request.add_string("Dec");
+        request.add_int4(3);
+        generic_record_impl response;
+        grpc::ClientContext context;
+
+        client->call(context, {0, 3}, request, response);
+
+        if (auto cursor = response.cursor()) {
+            if (auto result = cursor->fetch_int8()) {
+                std::cout << "Greeter received: " << *result << std::endl;
+            }
+        }
+    }
 
     tsurugi_destroy_generic_client(client.release());
     tsurugi_destroy_generic_client_factory(factory);
