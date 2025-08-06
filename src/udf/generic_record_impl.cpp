@@ -4,6 +4,10 @@ namespace plugin::udf {
 
 void generic_record_impl::reset() { values_.clear(); }
 
+void generic_record_impl::add_bool(bool v) { values_.emplace_back(v); }
+
+void generic_record_impl::add_bool_null() { values_.emplace_back(std::nullopt); }
+
 void generic_record_impl::add_int4(std::int32_t v) { values_.emplace_back(v); }
 
 void generic_record_impl::add_int4_null() { values_.emplace_back(std::nullopt); }
@@ -40,6 +44,14 @@ generic_record_cursor_impl::generic_record_cursor_impl(const std::vector<value_t
     : values_(values) {}
 
 bool generic_record_cursor_impl::has_next() { return index_ < values_.size(); }
+
+std::optional<bool> generic_record_cursor_impl::fetch_bool() {
+    if (!has_next()) return std::nullopt;
+    const auto& opt = values_[index_++];
+    if (!opt) return std::nullopt;
+    if (auto p = std::get_if<bool>(&*opt)) return *p;
+    return std::nullopt;
+}
 
 std::optional<std::int32_t> generic_record_cursor_impl::fetch_int4() {
     if (!has_next()) return std::nullopt;

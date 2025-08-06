@@ -11,6 +11,7 @@ class generic_record_cursor {
   public:
     virtual ~generic_record_cursor() = default;
 
+    virtual std::optional<bool> fetch_bool()           = 0;
     virtual std::optional<std::int32_t> fetch_int4()   = 0;
     virtual std::optional<std::int64_t> fetch_int8()   = 0;
     virtual std::optional<std::uint32_t> fetch_uint4() = 0;
@@ -26,6 +27,9 @@ class generic_record {
     virtual ~generic_record() = default;
 
     virtual void reset() = 0;
+
+    virtual void add_bool(bool value) = 0;
+    virtual void add_bool_null()      = 0;
 
     virtual void add_int4(std::int32_t value) = 0;
     virtual void add_int4_null()              = 0;

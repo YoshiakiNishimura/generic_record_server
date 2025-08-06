@@ -6,12 +6,14 @@
 
 namespace plugin::udf {
 
-using value_type = std::optional<std::variant<std::int32_t, std::int64_t, std::uint32_t,
+using value_type = std::optional<std::variant<bool, std::int32_t, std::int64_t, std::uint32_t,
     std::uint64_t, std::string, double, float>>;
 
 class generic_record_impl : public generic_record {
   public:
     void reset() override;
+    void add_bool(bool value) override;
+    void add_bool_null() override;
     void add_int4(std::int32_t value) override;
     void add_int4_null() override;
     void add_int8(std::int64_t value) override;
@@ -35,6 +37,7 @@ class generic_record_impl : public generic_record {
 class generic_record_cursor_impl : public generic_record_cursor {
   public:
     explicit generic_record_cursor_impl(const std::vector<value_type>& values);
+    std::optional<bool> fetch_bool() override;
     std::optional<std::int32_t> fetch_int4() override;
     std::optional<std::int64_t> fetch_int8() override;
     std::optional<std::uint32_t> fetch_uint4() override;
