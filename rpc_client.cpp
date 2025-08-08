@@ -9,10 +9,24 @@ using grpc::ClientContext;
 using grpc::Status;
 using namespace plugin::udf;
 rpc_client::rpc_client(std::shared_ptr<grpc::Channel> channel)
-    : greeter_stub_(Greeter::NewStub(channel)), byer_stub_(myapi::Byer::NewStub(channel)) {}
+    : greeter_stub_(Greeter::NewStub(channel)), byer_stub_(myapi::Byer::NewStub(channel)) {
+    std::cerr << "[rpc_client] RPC client initialized" << std::endl;
+    if (greeter_stub_) {
+        std::cerr << "[rpc_client] Greeter stub initialized" << std::endl;
+    } else {
+        std::cerr << "[rpc_client] Greeter stub initialization failed" << std::endl;
+    }
+    if (byer_stub_) {
+        std::cerr << "[rpc_client] Byer stub initialized" << std::endl;
+    } else {
+        std::cerr << "[rpc_client] Byer stub initialization failed" << std::endl;
+    }
+}
 
 void rpc_client::call(ClientContext& context, function_index_type function_index,
     generic_record& request, generic_record& response) const {
+    std::cerr << "[rpc_client] call function_index: " << function_index.first << ", "
+              << function_index.second << std::endl;
     auto cursor = request.cursor();
     if (!cursor) { throw std::runtime_error("request cursor is null"); }
 
@@ -23,7 +37,11 @@ void rpc_client::call(ClientContext& context, function_index_type function_index
             StringValue req;
             StringValue rep;
             auto arg1 = cursor->fetch_string();
-            if (!arg1) { throw std::runtime_error("No input arg1"); }
+            if (!arg1) {
+                throw std::runtime_error("No input arg1");
+            } else {
+                std::cerr << "[rpc_client] case 0 arg1: " << *arg1 << std::endl;
+            }
             req.set_value(*arg1);
 
             Status status = greeter_stub_->SayHello(&context, req, &rep);
@@ -39,7 +57,11 @@ void rpc_client::call(ClientContext& context, function_index_type function_index
             Int32Value req;
             Int32Value rep;
             auto arg1 = cursor->fetch_int4();
-            if (!arg1) { throw std::runtime_error("No input arg1"); }
+            if (!arg1) {
+                throw std::runtime_error("No input arg1");
+            } else {
+                std::cerr << "[rpc_client] case 1 arg1: " << *arg1 << std::endl;
+            }
             req.set_value(*arg1);
             Status status = greeter_stub_->IntAddOne(&context, req, &rep);
             if (status.ok()) {
@@ -53,7 +75,11 @@ void rpc_client::call(ClientContext& context, function_index_type function_index
             StringValue req;
             StringValue rep;
             auto arg1 = cursor->fetch_string();
-            if (!arg1) { throw std::runtime_error("No input arg1"); }
+            if (!arg1) {
+                throw std::runtime_error("No input arg1");
+            } else {
+                std::cerr << "[rpc_client] case 2 arg1: " << *arg1 << std::endl;
+            }
             req.set_value(*arg1);
             Status status = byer_stub_->SayWorld(&context, req, &rep);
             if (status.ok()) {
@@ -67,10 +93,13 @@ void rpc_client::call(ClientContext& context, function_index_type function_index
             tsurugidb::udf::value::Decimal req;
             tsurugidb::udf::value::LocalTime rep;
             auto arg1 = cursor->fetch_string();
-            if (!arg1) { throw std::runtime_error("No input arg1"); }
+            if (!arg1) { throw std::runtime_error("No input arg1"); }else{
+                std::cerr << "[rpc_client] case 3 arg1: " << *arg1 << std::endl;
+            }
             auto arg2 = cursor->fetch_int4();
-            if (!arg2) { throw std::runtime_error("No input arg2"); }
-
+            if (!arg2) { throw std::runtime_error("No input arg2"); }else{
+                std::cerr << "[rpc_client] case 3 arg2: " << *arg2 << std::endl;
+            }
             req.set_unscaled_value(*arg1);
             req.set_exponent(*arg2);
             Status status = byer_stub_->DecDecimal(&context, req, &rep);

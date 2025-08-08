@@ -16,8 +16,8 @@
 #include "udf/udf_loader.h"
 #include "udf/generic_client_factory.h"
 
-#include "udf/generic_record_impl.h"
 #include "udf/generic_client.h"
+#include "udf/generic_record_impl.h"
 
 #include "udf/generic_record_impl.h"
 #include <dlfcn.h>
@@ -68,31 +68,41 @@ void udf_loader::unload_all() {
     handles_.clear();
 }
 void udf_loader::create_api_from_handle(void* handle) {
-    if (!handle) return;
+    if (!handle) return ;
 
     using create_func_type = plugin_api* (*)();
-    auto* create_func      = reinterpret_cast<create_func_type>(dlsym(handle, "create_plugin_api"));
-
-    if (!create_func) {
-        std::cerr << "  Failed to find symbol create_plugin_api\n";
-        return;
+    dlerror(); // clear error
+    auto* create_func = reinterpret_cast<create_func_type>(dlsym(handle, "create_plugin_api"));
+    const char* dlsym_error = dlerror();
+    if (dlsym_error) {
+        std::cerr << "  Failed to find symbol create_plugin_api: " << dlsym_error << std::endl;
+        return ;
     }
 
     plugin_api* api = create_func();
     if (!api) {
         std::cerr << "  create_plugin_api returned nullptr\n";
-        return;
+        return ;
     }
     apis_.emplace_back(api);
-    auto* create_func2 = reinterpret_cast<generic_client_factory* (*)(const char*)>(
+
+    dlerror();
+    auto* create_factory_func = reinterpret_cast<generic_client_factory* (*)(const char*)>(
         dlsym(handle, "tsurugi_create_generic_client_factory"));
-    if (!create_func2) {
-        std::cerr << "  Failed to find symbol tsurugi_create_generic_client_factory\n";
-        return;
+    dlsym_error = dlerror();
+    if (dlsym_error) {
+        std::cerr << "  Failed to find symbol tsurugi_create_generic_client_factory: "
+                  << dlsym_error << std::endl;
+        return ;
     }
-    factory_ = create_func2("Greeter");
-        auto channel = grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
-    std::unique_ptr<generic_client> client(factory_->create(channel));
+
+    factory_ = create_factory_func("Greeter");
+    if (!factory_) {
+        std::cerr << "[PluginLoader] Factory creation failed" << std::endl;
+        return ;
+    }
+    std::cerr << "[PluginLoader] Factory created: " << factory_ << std::endl;
+    return ;
 }
 const std::vector<plugin_api*>& udf_loader::apis() const noexcept { return apis_; }
 generic_client_factory* udf_loader::get_factory() const noexcept { return factory_; }

@@ -21,10 +21,20 @@ int main(int argc, char** argv) {
     const char* so_path = argv[1];
     loader->load(so_path);
     auto factory = loader->get_factory();
+    if (!factory) {
+        std::cerr << "[main] Factory creation failed" << std::endl;
+        return 1;
+    }
+    std::cerr << "[main] Factory created: " << factory << std::endl;
     auto channel = grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
-    std::unique_ptr<generic_client> client(factory->create(channel));
-    {
-        std::cout << "SayHello connect" << std::endl;
+    auto raw_client = factory->create(channel);
+    if (!raw_client) {
+        std::cerr << "[main] generic_client creation failed" << std::endl;
+        return 1;
+    }
+    std::unique_ptr<generic_client> client(raw_client);
+    try {
+        std::cout << "[main] SayHello connect" << std::endl;
         generic_record_impl request;
         request.add_string("hello");
 
@@ -38,9 +48,11 @@ int main(int argc, char** argv) {
                 std::cout << "Greeter received: " << *result << std::endl;
             }
         }
+    } catch (const std::exception& ex) {
+        std::cerr << "[main] Exception during RPC call: " << ex.what() << std::endl;
     }
-        {
-        std::cout << "AddIntOne connect" << std::endl;
+    try {
+        std::cout << "[main] AddIntOne connect" << std::endl;
         generic_record_impl request;
         request.add_int4(42);
 
@@ -54,9 +66,11 @@ int main(int argc, char** argv) {
                 std::cout << "Greeter received: " << *result << std::endl;
             }
         }
+    } catch (const std::exception& ex) {
+        std::cerr << "[main] Exception during RPC call: " << ex.what() << std::endl;
     }
-    {
-        std::cout << "SayWolrd connect" << std::endl;
+    try {
+        std::cout << "[main] SayWolrd connect" << std::endl;
         generic_record_impl request;
         request.add_string("world");
 
@@ -70,9 +84,11 @@ int main(int argc, char** argv) {
                 std::cout << "Greeter received: " << *result << std::endl;
             }
         }
+    } catch (const std::exception& ex) {
+        std::cerr << "[main] Exception during RPC call: " << ex.what() << std::endl;
     }
-    {
-        std::cout << "DecDecimal connect" << std::endl;
+    try {
+        std::cout << "[main] DecDecimal connect" << std::endl;
         generic_record_impl request;
         request.add_string("Dec");
         request.add_int4(3);
@@ -86,7 +102,9 @@ int main(int argc, char** argv) {
                 std::cout << "Greeter received: " << *result << std::endl;
             }
         }
+    } catch (const std::exception& ex) {
+        std::cerr << "[main] Exception during RPC call: " << ex.what() << std::endl;
     }
     loader->unload_all();
-        return 0;
+    return 0;
 }

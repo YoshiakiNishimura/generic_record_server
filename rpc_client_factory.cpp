@@ -9,7 +9,16 @@ class rpc_client_factory : public generic_client_factory {
 };
 
 extern "C" generic_client_factory* tsurugi_create_generic_client_factory(const char* service_name) {
-    if (std::string_view(service_name) == "Greeter") { return new rpc_client_factory(); }
+    std::cerr << "[tsurugi_create_generic_client_factory] Creating factory for service: "
+              << service_name << std::endl;
+    if (std::string_view(service_name) == "Greeter") {
+        std::cerr << "[tsurugi_create_generic_client_factory] Returning rpc_client_factory"
+                  << std::endl;
+        return new rpc_client_factory();
+    }
+    std::cerr << "[tsurugi_create_generic_client_factory] No matching factory for service: "
+              << service_name << std::endl;
+
     return nullptr;
 }
 
