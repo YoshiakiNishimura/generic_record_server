@@ -47,6 +47,16 @@ target_include_directories(rpc_server PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(rpc_server gRPC::grpc++ protobuf::libprotobuf)
 
 add_executable(
+  plugin_loader
+  ${CMAKE_CURRENT_SOURCE_DIR}/plugin_loader/plugin.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/udf/udf_loader.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/udf/generic_record_impl.cpp)
+target_include_directories(
+  plugin_loader PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
+                         ${CMAKE_CURRENT_BINARY_DIR})
+target_link_libraries(plugin_loader gRPC::grpc++ protobuf::libprotobuf)
+
+add_executable(
   rpc_client
   rpc_client.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/udf/generic_record_impl.cpp
@@ -56,7 +66,26 @@ add_executable(
   ${PROTO_GEN_HDRS}
   ${GRPC_GEN_SRCS}
   ${GRPC_GEN_HDRS})
+
+add_library(
+  plugin_api SHARED
+  rpc_client.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/udf/generic_record_impl.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/udf/plugin_api_impl.cpp
+  rpc_client_factory.cpp
+  ${PROTO_GEN_SRCS}
+  ${PROTO_GEN_HDRS}
+  ${GRPC_GEN_SRCS}
+  ${GRPC_GEN_HDRS})
+
+target_include_directories(
+  plugin_api
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/include
+          ${CMAKE_CURRENT_BINARY_DIR})
+
+target_link_libraries(plugin_api gRPC::grpc++ protobuf::libprotobuf)
+
 target_include_directories(
   rpc_client PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
-                         ${CMAKE_CURRENT_BINARY_DIR})
+                     ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(rpc_client gRPC::grpc++ protobuf::libprotobuf)
